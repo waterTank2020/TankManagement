@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+ 
+
+    <title>Home</title>
+	<script src="/lib/vue.js"></script>
+	<script src="/lib/vue.min.js"></script>
+	<script src="/lib/lodash.min.js"></script>
+	<script src="/lib/axios.min.js"></script>
+	<script src="/lib/jquery-1.12.4.js"></script>
+	<script src="/lib/jquery-ui.js"></script>
+	<script src="/lib/jquery.multiselect.js"></script>
+	<link type="text/css" rel="stylesheet" href="/css/style.css" />
+</head>
+<body class="home-page">
+	<div id="home" class="card signup">
+		<div id="building" style="margin-bottom :20px">
+			<select id="building_dropdwn" style="max-width:20%;">
+				<option value="-1">Select building</option>
+				<option v-for="building in buildingList" :value="building.id">{{building.buildingName}}</option>
+			</select>
+			<button v-on:click="showAddBuildingPopup = true;">Add Building</button>
+			<div v-if="showAddBuildingPopup">
+				<div class="overlay" style='display:block'>
+					<div class="ui-dialog add-pop shrmod" style='display:block'>
+						<div class="dialgtl">
+							<span class="name">Add new building</span>
+							</span> <em  title="Close" class="rmv-ico ti-close" @click="showAddBuildingPopup = false;">Close</em>
+						</div>
+						<div class="rec">
+						<div class="cntr mn prow">
+						
+							<div class="rec dfitm in">
+							<div class="rc c1 ftsb">Building Name </div>
+								<div class="rc c2"> 
+									<input type="text" v-model="createBuilding.buildingName" class="activeText" placeholder="Building Name" id='building_name' label='name' />
+								</div>
+							</div>
+							<div class="rec dfitm in"> 
+								<div class="rc c1 ftsb">Building Address </div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.buildingAddress" maxlength="50" class="form-control" placeholder="Building Address" id='building_address' label='address' />
+								</div>
+							</div>
+							
+							<div class="rec dfitm in">
+							 <div class="rc c1 ftsb">Risk</div>
+							 	<div class="rc c2">
+									<select id="risk_dropdwn"  
+										v-model="createBuilding.risk">
+										<option value="Low">Low</option>
+										<option value="Medium">Medium</option>
+										<option value="High">High</option>
+									</select>
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">General Comments</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.generalComments" maxlength="100" class="form-control" placeholder="General Comments"  />
+								</div>
+								
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Building Usage</div>
+								<div class="rc c2">
+									<select id="usage_dropdwn" 
+										v-model="createBuilding.usage">
+										<option value="General needs">General needs</option>
+										<option value="Health care">Health care</option>
+										<option value="Care home">Care home</option>
+									</select>
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Landlord Responsibility </div>
+								<div class="rc c2">
+									<select id="landlord_dropdwn" 
+										v-model="createBuilding.enableResponsibility">
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+								<div class="rc c3">
+									<input v-if="createBuilding.enableResponsibility == 'Yes'" type="text" v-model="createBuilding.landlordResponsibility" maxlength="20" class="form-control" placeholder="Responsibility" id='building_resp' label='responsibility' />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Date Risk Assessment</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.dateRisk" maxlength="10" class="form-control" placeholder="Date Risk Assessment" id='dateRiskAss'  />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Date Review</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.dateReview" maxlength="10" class="form-control" placeholder="Date Review" id='dateReview'  />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Lines of Management Present </div>
+								<div class="rc c2">
+									<select id="management_dropdwn" 
+										v-model="createBuilding.enableManagement">
+										<option value="">Select Management</option>
+										<option value="duty holder">Duty Holder</option>
+										<option value="responsible person">Responsible Person</option>
+										<option value="deputy responsible person">Deputy Responsible Person</option>
+									</select>
+								</div>
+								<div class="rc c3">
+									<input v-if="createBuilding.enableManagement !='' " type="text" v-model="createBuilding.management" maxlength="20" class="form-control" placeholder="Select Management" id='building_manag' />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Sentinel Outlets</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.sentinel" maxlength="50" class="form-control" placeholder="Sentinel Outlets" id='Sentinel'/>
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Out of Specification Temperatures:</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.temperature" maxlength="50" class="form-control" placeholder="Comment" id='temp'  />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">TMV Present </div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.tmvPresent" maxlength="20" class="form-control" placeholder="TMV Present" id='TMV-present'  />
+								</div>
+								<div class="rc c3">
+									<select id="tmv_dropdwn" 
+										v-model="createBuilding.enableTMVComment">
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+								</div>
+								<div class="rc c4">
+									<input v-if="createBuilding.enableTMVComment == 'Yes'" type="text" v-model="createBuilding.tmvComments" maxlength="50" class="form-control" placeholder="Comments"  />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Showers Present</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.showers" maxlength="20" class="form-control" placeholder="Showers Present"  />
+									<select id="shower_dropdwn" 
+										v-model="createBuilding.enableShowerComment">
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+									<input v-if="createBuilding.enableShowerComment == 'Yes'" type="text" v-model="createBuilding.showersComment" maxlength="50" class="form-control" placeholder="Comment" />
+								</div>
+							</div>
+							<div class="rec dfitm in">
+								<div class="rc c1 ftsb">Infrequent Outlets/Areas</div>
+								<div class="rc c2">
+									<input type="text" v-model="createBuilding.outlet" maxlength="20" class="form-control" placeholder="Infrequent Outlets/Areas" />
+									<select id="landlord_dropdwn" 
+										v-model="createBuilding.enableOutletComment">
+										<option value="Yes">Yes</option>
+										<option value="No">No</option>
+									</select>
+									<input v-if="createBuilding.enableOutletComment == 'Yes'" type="text" v-model="createBuilding.outletComment" maxlength="20" class="form-control" placeholder="location comment" id='building_resp' label='responsibility' />
+								</div>
+							</div>
+							<div class="rec dfitm in"> 
+								<div class="rc c2">Other Assets</div>
+								<div class="rc c3">
+									<select id="otherAsset_dropdwn" 
+										v-model="createBuilding.otherAsset">
+										<option value="softener">Softener</option>
+										<option value="UV light filter">UV Light Filter</option>
+									</select>
+								</div>
+							</div>
+						</div>
+						</div>
+						<div class="rec btn" >
+							<button @click="onSaveBuilding">Save Building</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="yearly-service" style="margin-bottom :20px">
+			<select id="yearly_service_dropdwn" style="max-width:20%;">
+				<option value="-1">Select yearly service</option>
+				<option v-for="service in yearlyServiceList" :value="service.id">{{service.name}}</option>
+			</select>
+			<button v-on:click="showAddYearlyServicePopup = true;">Add Yearly Service</button>
+			<div v-if="showAddYearlyServicePopup">
+				<div class="overlay" style='display:block'>
+					<div class="ui-dialog add-pop shrmod" style='display:block'>
+						<div class="dialgtl">
+							<span class="name">Add new yearly service</span>
+							</span> <em  title="Close" class="rmv-ico ti-close" @click="showAddYearlyServicePopup = false;">Close</em>
+						</div>
+						<div class="cntr mn prow">
+							<div> <span>Name </span>
+								<input type="text" v-model="createYearlyService.name" class="form-control" placeholder="Name" />
+							</div>
+							<div> <span>Date </span>
+								<input type="text" v-model="createYearlyService.date" class="form-control" placeholder="Date" />
+							</div>
+							<div> <span>Location </span>
+								<input type="text" v-model="createYearlyService.location" class="form-control" placeholder="Location" />
+							</div>
+							<div> <span>Clean disinfection & descale completed </span> 
+								<select id="Clean_disinfection_dropdwn" v-model="createYearlyService.cleanDisInfect">
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</div>
+							<div> <span>Temperature Log (TMV should reach 43 degree celsius within 1 minute)  </span>
+								<input type="text" v-model="createYearlyService.temperatureLog" class="form-control" placeholder="Temperature Log" />
+							</div>
+							<div> <span>Fault Found </span>
+								<input type="text" v-model="createYearlyService.fault" class="form-control" placeholder="Fault" />
+							</div>
+							<div> <span>Signature </span>
+								<input type="text" v-model="createYearlyService.Signature" class="form-control" placeholder="Signature" />
+							</div>
+						</div>
+						<div class="rec btn">
+							<button @click="onSaveYearlyService">Save</button>
+						</div>
+					</div>
+				</div>	
+			</div>
+		</div>
+		
+		<div id="monthly-outlet" style="margin-bottom :20px">
+			<select id="monthly_outlet_dropdwn" style="max-width:20%;">
+				<option value="-1">Select monthly outlet</option>
+				<option v-for="data in monthlyOutletList" :value="data.id">{{data.name}}</option>
+			</select>
+			<button v-on:click="showAddMonthlyOutLetPopup = true;">Add Monthly Outlet</button>
+			<div v-if="showAddMonthlyOutLetPopup">
+				<div class="overlay" style='display:block'>
+					<div class="ui-dialog add-pop shrmod" style='display:block'>
+						<div class="dialgtl">
+							<span class="name">Add new monthly outlet</span>
+							</span> <em  title="Close" class="rmv-ico ti-close" @click="showAddMonthlyOutLetPopup = false;">Close</em>
+						</div>
+						<div class="cntr mn prow">
+							<div> <span>Name </span>
+								<input type="text" v-model="createMonthlyOutlet.name" class="form-control" placeholder="Name" />
+							</div>
+							<div> <span>Date </span>
+								<input type="text" v-model="createMonthlyOutlet.date" class="form-control" placeholder="Date" />
+							</div>
+							<div> <span>Location </span>
+								<input type="text" v-model="createMonthlyOutlet.location" class="form-control" placeholder="Location" />
+							</div>
+							<div> <span>Water Source </span> 
+								<select id="water_source_dropdwn" v-model="createMonthlyOutlet.waterSource">
+									<option value="MainSupplyTank">Main supply tank</option>
+								</select>
+							</div>
+							<div> <span>Hot water temperature after 1 minute (control 50 degree C or >)  </span>
+								<input type="text" v-model="createMonthlyOutlet.hotWater" class="form-control" placeholder="Hot water temperature" />
+							</div>
+							<div> <span>Cold water temperature within 2 minutes (control 200C or <)  </span>
+								<input type="text" v-model="createMonthlyOutlet.coldWater" class="form-control" placeholder="cold water temperature" />
+							</div>
+							<div> <span>Fault Found </span>
+								<input type="text" v-model="createMonthlyOutlet.fault" class="form-control" placeholder="Fault" />
+							</div>
+							<div> <span>Signature </span>
+								<input type="text" v-model="createMonthlyOutlet.Signature" class="form-control" placeholder="Signature" />
+							</div>
+						</div>
+						<div class="rec btn">
+							<button @click="onSaveMonthlyOutlet">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="monthly-flow" style="margin-bottom :20px">
+			<select id="monthly_flow_dropdwn" style="max-width:20%;">
+				<option value="-1">Select monthly flow</option>
+				<option v-for="data in monthlyFlowList" :value="data.id">{{data.name}}</option>
+			</select>
+			<button v-on:click="showAddMonthlyFlowPopup = true;">Add Monthly Flow</button>
+			<div v-if="showAddMonthlyFlowPopup">
+				<div class="overlay" style='display:block'>
+					<div class="ui-dialog add-pop shrmod" style='display:block'>
+						<div class="dialgtl">
+							<span class="name">Add new monthly flow</span>
+							</span> <em  title="Close" class="rmv-ico ti-close" @click="showAddMonthlyFlowPopup = false;">Close</em>
+						</div>
+						<div class="cntr mn prow">
+							<div> <span>Name </span>
+								<input type="text" v-model="createMonthlyFlow.name" class="form-control" placeholder="Name" />
+							</div>
+							<div> <span>Date </span>
+								<input type="text" v-model="createMonthlyFlow.date" class="form-control" placeholder="Date" />
+							</div>
+							<div> <span>Location </span>
+								<select id="monthly_flow_location_dropdwn" v-model="createMonthlyFlow.location">
+									<option value="CAL">CAL</option>
+									<option value="WH">WH</option>
+									<option value="Immersion">Immersion</option>
+									<option value="Plate Exchanger">Plate Exchanger</option>
+								</select>
+							</div>
+					
+							<div> <span>Flow Temperature (Should be 60 degree C or >)Return Temperature if applicable (Should be 50 degree C)   </span>
+								<input type="text" v-model="createMonthlyOutlet.flowTemperature" class="form-control" placeholder="Flow temperature" />
+							</div>
+							<div> <span>Return Temperature if applicable (Should be 50 degree C or >)  </span>
+								<input type="text" v-model="createMonthlyOutlet.returnTemperature" class="form-control" placeholder="Return temperature" />
+							</div>
+							<div> <span>Fault Found </span>
+								<input type="text" v-model="createMonthlyFlow.fault" class="form-control" placeholder="Fault" />
+							</div>
+							<div> <span>Signature </span>
+								<input type="text" v-model="createMonthlyFlow.Signature" class="form-control" placeholder="Signature" />
+							</div>
+						</div>
+						<div class="rec btn">
+							<button @click="onSaveMonthlyFlow">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div id="main-supply" style="margin-bottom :20px">
+			<select id="main_supply_dropdwn" style="max-width:20%;">
+				<option value="-1">Select main supply</option>
+				<option v-for="data in mainSupplyList" :value="data.id">{{data.name}}</option>
+			</select>
+			<button v-on:click="showAddMainSupplyPopup = true;">Add Main Supply</button>
+			<div v-if="showAddMainSupplyPopup">
+				<div class="overlay" style='display:block'>
+					<div class="ui-dialog add-pop shrmod" style='display:block'>
+						<div class="dialgtl">
+							<span class="name">Add new main supply</span>
+							</span> <em  title="Close" class="rmv-ico ti-close" @click="showAddMainSupplyPopup = false;">Close</em>
+						</div>
+						<div class="cntr mn prow">
+							<div> <span>Name </span>
+								<input type="text" v-model="createMainSupply.name" class="form-control" placeholder="Name" />
+							</div>
+							<div> <span>Date </span>
+								<input type="text" v-model="createMainSupply.date" class="form-control" placeholder="Date" />
+							</div>
+							<div> <span>Location </span>
+								<input type="text" v-model="createMainSupply.location" class="form-control" placeholder="Location" />
+							</div>
+					
+							<div> <span>Insulation</span>
+								<select id="insulation_dropdwn" v-model="createMainSupply.insulation">
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</div>
+							<div> <span>Drain Present</span>
+								<select id="drain_dropdwn" v-model="createMainSupply.drainPresent">
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</div>
+						</div>
+						<div class="rec btn">			
+							<button @click="onSaveMainSupply">Save</button>
+						</div>
+					</div>
+				</div>		
+			</div>
+		</div>
+		
+		<div id="quaterly-service">
+			<select id="quaterly_service_dropdwn" style="max-width:20%;">
+				<option value="-1">Select quaterly service</option>
+				<option v-for="service in quaterlyServiceList" :value="service.id">{{service.name}}</option>
+			</select>
+			<button v-on:click="showAddQuaterlyServicePopup = true;">Add Quaterly Service</button>
+			<div v-if="showAddQuaterlyServicePopup">
+				<div class="overlay" style='display:block'>
+					<div class="ui-dialog add-pop shrmod" style='display:block'>
+						<div class="dialgtl">
+							<span class="name">Add quaterly service</span>
+							</span> <em  title="Close" class="rmv-ico ti-close" @click="showAddQuaterlyServicePopup = false;">Close</em>
+						</div>
+						<div class="cntr mn prow">
+							<div> <span>Name </span>
+								<input type="text" v-model="createQuaterlyService.name" class="form-control" placeholder="Name" />
+							</div>
+							<div> <span>Date </span>
+								<input type="text" v-model="createQuaterlyService.date" class="form-control" placeholder="Date" />
+							</div>
+							<div> <span>Location </span>
+								<input type="text" v-model="createQuaterlyService.location" class="form-control" placeholder="Location" />
+							</div>
+							<div> <span>Clean disinfection & descale completed </span> 
+								<select id="Clean_disinfection_dropdwn" v-model="createQuaterlyService.cleanDisinfection">
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</div>
+							<div> <span>Temperature log (shower should reach 43 degree C within 1 minute of running) </span>
+								<input type="text" v-model="createQuaterlyService.temperatureLog" class="form-control" placeholder="Temperature Log" />
+							</div>
+							<div> <span>Fault Found </span>
+								<input type="text" v-model="createYearlyService.fault" class="form-control" placeholder="Fault" />
+							</div>
+							<div> <span>Signature </span>
+								<select id="drain_dropdwn" v-model="createYearlyService.fault">
+									<option value="Yes">Yes</option>
+									<option value="No">No</option>
+								</select>
+							</div>
+						</div>
+						<div class="rec btn">
+							<button @click="onSaveQuaterlyService">Save</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script src="/js/home.js"></script>
+	
+</body>
+</html>

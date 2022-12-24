@@ -1,6 +1,7 @@
 package entity;
 
 public class MonthlyFlow {
+	String id;
 	String name;
 	String date;
 	String location;
@@ -56,6 +57,12 @@ public class MonthlyFlow {
 	}
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 }

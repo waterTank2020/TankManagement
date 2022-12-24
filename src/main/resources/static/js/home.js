@@ -1,4 +1,4 @@
-
+Vue.config.devtools = true
 mainVU = new Vue({
 	el: '#home',
 	data: {
@@ -120,8 +120,10 @@ mainVU = new Vue({
 			axios.post('/app/create-building', this.createBuilding)
 				.then(response => {
 					if (response.data) {
-						_this.buildingList.push(response.data.building);
-						_this.showAddBuildingPopup = false;
+						if(!_this.createBuilding.id) {
+							_this.buildingList.push(response.data.building);
+						}
+						_this.showAddBuildingPopup = false;							
 					}
 				})
 				.catch(error => {
@@ -135,7 +137,9 @@ mainVU = new Vue({
 			axios.post('/app/create-yearly-service', this.createYearlyService)
 				.then(response => {
 					if (response.data) {
-						_this.yearlyServiceList.push(response.data.yearlyService);
+						if(!_this.createYearlyService.id) {
+							_this.yearlyServiceList.push(response.data.yearlyService);							
+						} 
 						_this.showAddYearlyServicePopup = false;
 					}
 				})
@@ -150,8 +154,10 @@ mainVU = new Vue({
 			axios.post('/app/create-monthly-outlet', this.createMonthlyOutlet)
 				.then(response => {
 					if (response.data) {
-						_this.monthlyOutletList.push(response.data.monthlyOutlet);
-						_this.showAddMonthlyOutLetPopup = false;
+						if(!_this.createMonthlyOutlet.id) {
+							_this.monthlyOutletList.push(response.data.monthlyOutlet);
+						}
+						_this.showAddMonthlyOutLetPopup = false;							
 					}
 				})
 				.catch(error => {
@@ -165,8 +171,10 @@ mainVU = new Vue({
 			axios.post('/app/create-monthly-flow', this.createMonthlyFlow)
 				.then(response => {
 					if (response.data) {
-						_this.monthlyFlowList.push(response.data.monthlyFlow);
-						_this.showAddMonthlyFlowPopup = false;
+						if(!_this.createMonthlyFlow.id) {
+							_this.monthlyFlowList.push(response.data.monthlyFlow);
+						}
+						_this.showAddMonthlyFlowPopup = false;							
 					}
 				})
 				.catch(error => {
@@ -181,8 +189,10 @@ mainVU = new Vue({
 			axios.post('/app/create-main-supply', this.createMainSupply)
 				.then(response => {
 					if (response.data) {
-						_this.mainSupplyList.push(response.data.mainSupply);
-						_this.showAddMainSupplyPopup = false;
+						if(!_this.createMainSupply.id) {
+							_this.mainSupplyList.push(response.data.mainSupply);
+						}
+						_this.showAddMainSupplyPopup = false;							
 					}
 				})
 				.catch(error => {
@@ -196,14 +206,71 @@ mainVU = new Vue({
 			axios.post('/app/create-quaterly-service', this.createQuaterlyService)
 				.then(response => {
 					if (response.data) {
-						_this.quaterlyServiceList.push(response.data.quaterlyService);
-						_this.showAddQuaterlyServicePopup = false;
+						if(!_this.createQuaterlyService.id) {
+							_this.quaterlyServiceList.push(response.data.quaterlyService);
+						}
+						_this.showAddQuaterlyServicePopup = false;							
 					}
 				})
 				.catch(error => {
 					console.log(error);
 
 				});
+		},
+		////////////////////////////////////////////////
+		onSelectBuiliding : function (event) {
+			var obj = _.find(this.buildingList,{id : event.target.value});
+			if(obj) {
+				this.createBuilding = obj;
+				this.showAddBuildingPopup = true;				
+			}else{
+				this.createBuilding = {};
+			}	
+		},
+		onSelectYearlyService : function (event) {
+			var obj = _.find(this.yearlyServiceList,{id : event.target.value});
+			if(obj) {
+				this.createYearlyService = obj;
+				this.showAddYearlyServicePopup = true;				
+			}else{
+				this.createYearlyService = {};
+			}
+		},
+		onSelectMonthlyOutlet : function (event) {
+			var obj = _.find(this.monthlyOutletList,{id : event.target.value});
+			if(obj) {
+				this.createMonthlyOutlet = obj;
+				this.showAddMonthlyOutLetPopup = true;				
+			}else{
+				this.createMonthlyOutlet = {};
+			}
+		},
+		onSelectMonthlyFlow : function (event) {
+			var obj = _.find(this.monthlyFlowList,{id : event.target.value});
+			if(obj) {
+				this.createMonthlyFlow = obj;
+				this.showAddMonthlyFlowPopup = true;				
+			}else{
+				this.createMonthlyFlow = {};
+			}
+		},
+		onSelectMainSupply : function (event) {
+			var obj = _.find(this.mainSupplyList,{id : event.target.value});
+			if(obj) {
+				this.createMainSupply = obj;
+				this.showAddMainSupplyPopup = true;				
+			}else{
+				this.createMainSupply = {};
+			}
+		},
+		onSelectQuaterlyService : function (event) {
+			var obj = _.find(this.quaterlyServiceList,{id : event.target.value});
+			if(obj) {
+				this.createQuaterlyService = obj;
+				this.showAddQuaterlyServicePopup = true;				
+			}else{
+				this.createQuaterlyService = {};
+			}
 		},
 	}
 });

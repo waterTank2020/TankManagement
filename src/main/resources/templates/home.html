@@ -17,9 +17,9 @@
 <body class="home-page">
 	<div id="home" class="card signup">
 		<div id="building" style="margin-bottom :20px">
-			<select id="building_dropdwn" style="max-width:20%;">
+			<select id="building_dropdwn" style="max-width:20%;" @change="onSelectBuiliding($event)">
 				<option value="-1">Select building</option>
-				<option v-for="building in buildingList" :value="building.id">{{building.buildingName}}</option>
+				<option v-for="building in buildingList" :value="building.id" @select="onSelectBuiliding(building)">{{building.buildingName}}</option>
 			</select>
 			<button v-on:click="showAddBuildingPopup = true;">Add Building</button>
 			<div v-if="showAddBuildingPopup">
@@ -187,7 +187,7 @@
 		</div>
 		
 		<div id="yearly-service" style="margin-bottom :20px">
-			<select id="yearly_service_dropdwn" style="max-width:20%;">
+			<select id="yearly_service_dropdwn" style="max-width:20%;" @change="onSelectYearlyService($event)">
 				<option value="-1">Select yearly service</option>
 				<option v-for="service in yearlyServiceList" :value="service.id">{{service.name}}</option>
 			</select>
@@ -222,7 +222,7 @@
 								<input type="text" v-model="createYearlyService.fault" class="form-control" placeholder="Fault" />
 							</div>
 							<div> <span>Signature </span>
-								<input type="text" v-model="createYearlyService.Signature" class="form-control" placeholder="Signature" />
+								<input type="text" v-model="createYearlyService.signature" class="form-control" placeholder="Signature" />
 							</div>
 						</div>
 						<div class="rec btn">
@@ -234,7 +234,7 @@
 		</div>
 		
 		<div id="monthly-outlet" style="margin-bottom :20px">
-			<select id="monthly_outlet_dropdwn" style="max-width:20%;">
+			<select id="monthly_outlet_dropdwn" style="max-width:20%;" @change="onSelectMonthlyOutlet($event)">
 				<option value="-1">Select monthly outlet</option>
 				<option v-for="data in monthlyOutletList" :value="data.id">{{data.name}}</option>
 			</select>
@@ -271,7 +271,7 @@
 								<input type="text" v-model="createMonthlyOutlet.fault" class="form-control" placeholder="Fault" />
 							</div>
 							<div> <span>Signature </span>
-								<input type="text" v-model="createMonthlyOutlet.Signature" class="form-control" placeholder="Signature" />
+								<input type="text" v-model="createMonthlyOutlet.signature" class="form-control" placeholder="Signature" />
 							</div>
 						</div>
 						<div class="rec btn">
@@ -283,7 +283,7 @@
 		</div>
 		
 		<div id="monthly-flow" style="margin-bottom :20px">
-			<select id="monthly_flow_dropdwn" style="max-width:20%;">
+			<select id="monthly_flow_dropdwn" style="max-width:20%;" @change="onSelectMonthlyFlow($event)">
 				<option value="-1">Select monthly flow</option>
 				<option v-for="data in monthlyFlowList" :value="data.id">{{data.name}}</option>
 			</select>
@@ -321,7 +321,7 @@
 								<input type="text" v-model="createMonthlyFlow.fault" class="form-control" placeholder="Fault" />
 							</div>
 							<div> <span>Signature </span>
-								<input type="text" v-model="createMonthlyFlow.Signature" class="form-control" placeholder="Signature" />
+								<input type="text" v-model="createMonthlyFlow.signature" class="form-control" placeholder="Signature" />
 							</div>
 						</div>
 						<div class="rec btn">
@@ -333,7 +333,7 @@
 		</div>
 		
 		<div id="main-supply" style="margin-bottom :20px">
-			<select id="main_supply_dropdwn" style="max-width:20%;">
+			<select id="main_supply_dropdwn" style="max-width:20%;" @change="onSelectMainSupply($event)">
 				<option value="-1">Select main supply</option>
 				<option v-for="data in mainSupplyList" :value="data.id">{{data.name}}</option>
 			</select>
@@ -378,7 +378,7 @@
 		</div>
 		
 		<div id="quaterly-service">
-			<select id="quaterly_service_dropdwn" style="max-width:20%;">
+			<select id="quaterly_service_dropdwn" style="max-width:20%;" @change="onSelectQuaterlyService($event)">
 				<option value="-1">Select quaterly service</option>
 				<option v-for="service in quaterlyServiceList" :value="service.id">{{service.name}}</option>
 			</select>

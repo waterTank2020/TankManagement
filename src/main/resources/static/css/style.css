@@ -9592,7 +9592,7 @@ button[type="disabled"], .disabled, .disabled:hover, .ui-state-disabled { backgr
 
 input[type=text],input[type=password],input[type=url],input[type=date],input[type=number],input[type=search],.slctdn,.dropdown,.selectcont,button,.button,.button-w,
 .ui-dialog .rec .txtfld { height: 38px; }
-button,.button,.button-w { display: flex; align-items: center; }
+button,.button,.button-w { display: center; align-items: center; }
 .rec.btn .button, .rec.btn button, .btns button,
 .cnvrstn .txtar button { justify-content: center; height: auto; }
 .rec.btn .button span  { color: #fff; opacity: 1; }
